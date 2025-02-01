@@ -684,6 +684,7 @@ class DatabricksArtifactRepository(CloudArtifactRepository):
         )
 
     def _abort_multipart_upload(self, cred_info):
+        print(f"Calling _abort_multipart_upload with URL <{cred_info.signed_uri}>")
         headers = self._extract_headers_from_credentials(cred_info.headers)
         with cloud_storage_http_request(
             "delete", cred_info.signed_uri, headers=headers
@@ -700,6 +701,7 @@ class DatabricksArtifactRepository(CloudArtifactRepository):
             self.run_id, run_relative_artifact_path, num_parts
         )
         try:
+            raise Exception("TEST error when performing multipart upload")
             part_etags = self._upload_parts(local_file, create_mpu_resp)
             self._complete_multipart_upload(
                 self.run_id,
