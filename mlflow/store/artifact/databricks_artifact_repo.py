@@ -700,6 +700,7 @@ class DatabricksArtifactRepository(CloudArtifactRepository):
             self.run_id, run_relative_artifact_path, num_parts
         )
         try:
+            raise Exception("Simulated failure in MPU")
             part_etags = self._upload_parts(local_file, create_mpu_resp)
             self._complete_multipart_upload(
                 self.run_id,
