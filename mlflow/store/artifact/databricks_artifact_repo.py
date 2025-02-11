@@ -609,7 +609,13 @@ class DatabricksArtifactRepository(CloudArtifactRepository):
     def _upload_part_retry(self, cred_info, upload_id, part_number, local_file, start_byte, size):
         data = read_chunk(local_file, size, start_byte)
         try:
-            return self._upload_part(cred_info, data)
+            # For testing the retry, always throw in part_number 2 to simulate a failure
+            if part_number == 2:
+                response = requests.Response()
+                response.status_code = 401
+                raise requests.HTTPError("Simulated failure for part_number 2", response=response)
+            else:
+                return self._upload_part(cred_info, data)
         except requests.HTTPError as e:
             if e.response.status_code not in (401, 403):
                 raise e
