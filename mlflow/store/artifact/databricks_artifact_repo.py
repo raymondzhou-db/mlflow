@@ -624,6 +624,8 @@ class DatabricksArtifactRepository(CloudArtifactRepository):
             headers=headers,
         ) as response:
             augmented_raise_for_status(response)
+            print(f"RaymondMPUClient upload part response {response.status_code, response.headers}")
+            return cred_info.signed_uri[:20]
             return response.headers["ETag"]
 
     def _upload_part_retry(self, cred_info, upload_id, part_number, local_file, start_byte, size):
@@ -644,6 +646,7 @@ class DatabricksArtifactRepository(CloudArtifactRepository):
 
     def _upload_parts(self, local_file, create_mpu_resp):
         futures = {}
+        print(f"RaymondMPUClient credential infos {create_mpu_resp.upload_credential_infos}")
         for index, cred_info in enumerate(create_mpu_resp.upload_credential_infos):
             part_number = index + 1
             start_byte = index * MLFLOW_MULTIPART_UPLOAD_CHUNK_SIZE.get()
@@ -657,7 +660,7 @@ class DatabricksArtifactRepository(CloudArtifactRepository):
                 size=MLFLOW_MULTIPART_UPLOAD_CHUNK_SIZE.get(),
             )
             futures[future] = part_number
-
+        print(f"RaymondMPUClient futures {create_mpu_resp.upload_credential_infos}")
         results, errors = _complete_futures(futures, local_file)
         if errors:
             raise MlflowException(
