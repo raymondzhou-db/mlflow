@@ -2261,6 +2261,7 @@ class FileStore(AbstractStore):
         self,
         experiment_ids: list[str],
         filter_string: Optional[str] = None,
+        datasets: Optional[list[str]] = None,
         max_results: Optional[int] = None,
         order_by: Optional[list[dict[str, Any]]] = None,
         page_token: Optional[str] = None,
@@ -2271,6 +2272,11 @@ class FileStore(AbstractStore):
         Args:
             experiment_ids: List of experiment ids to scope the search.
             filter_string: A search filter string.
+            datasets: List of dictionaries to specify datasets on which to apply metrics filters.
+                The following fields are supported:
+
+                name (str): Required. Name of the dataset.
+                digest (str): Optional. Digest of the dataset.
             max_results: Maximum number of logged models desired. Default is 100.
             order_by: List of dictionaries to specify the ordering of the search results.
                 The following fields are supported:
