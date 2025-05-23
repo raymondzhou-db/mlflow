@@ -515,6 +515,7 @@ class DatabricksArtifactRepository(CloudArtifactRepository):
                 where the artifact will be logged.
 
         """
+        print(f"Cloud credential type: {ArtifactCredentialType.Name(cloud_credential_info.type)}")
         if cloud_credential_info.type == ArtifactCredentialType.AZURE_SAS_URI:
             self._azure_upload_file(
                 cloud_credential_info,
